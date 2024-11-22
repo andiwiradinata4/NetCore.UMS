@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="13.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
+		<ProjectReference Include="..\UMS.Core\UMS.Core.csproj" />
+		<Reference Include="AW.Core">
+			<HintPath>..\DLL\AW.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="AW.Infrastructure">
+			<HintPath>..\DLL\AW.Infrastructure.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+</Project>
