@@ -42,18 +42,15 @@
 		<Content Include="appsettings.*.json" Exclude="appsettings.$(EnvironmentName).json" DependentUpon="appsettings.json" CopyToOutputDirectory="Never" />
 		<Content Include="appsettings.$(EnvironmentName).json" DependentUpon="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="AW.Core">
-	    <HintPath>..\DLL\AW.Core.dll</HintPath>
-	  </Reference>
-	  <Reference Include="AW.Infrastructure">
-	    <HintPath>..\DLL\AW.Infrastructure.dll</HintPath>
-	  </Reference>
-	  <Reference Include="AW.Web">
-	    <HintPath>..\DLL\AW.Web.dll</HintPath>
-	  </Reference>
+		<Reference Include="AW.Core">
+			<HintPath>..\DLL\AW.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="AW.Infrastructure">
+			<HintPath>..\DLL\AW.Infrastructure.dll</HintPath>
+		</Reference>
+		<Reference Include="AW.Web">
+			<HintPath>..\DLL\AW.Web.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 	<Target Name="RenameAppsettings" AfterTargets="Publish">
 		<Move SourceFiles="$(PublishDir)\appsettings.$(EnvironmentName).json" DestinationFiles="$(PublishDir)\appsettings.json" />
