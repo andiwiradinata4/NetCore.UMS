@@ -94,7 +94,7 @@ namespace UMS.Infrastructure.Services
                         TokenType = AppToken.TokenTypeValue.REFRESH_TOKEN.ToString(),
                         TokenValue = refreshToken,
                         ValidFrom = DateTime.Today,
-                        ValidTo = DateTime.Today.AddYears(100),
+                        ValidTo = DateTime.Today.AddDays(7),
                     }, true);
 
                     context.SaveChanges();
@@ -181,7 +181,7 @@ namespace UMS.Infrastructure.Services
                         TokenType = AppToken.TokenTypeValue.REFRESH_TOKEN.ToString(),
                         TokenValue = refreshToken,
                         ValidFrom = DateTime.Now,
-                        ValidTo = DateTime.Now.AddSeconds(5),
+                        ValidTo = DateTime.Now.AddDays(7),
                     }, true);
 
                     context.SaveChanges();

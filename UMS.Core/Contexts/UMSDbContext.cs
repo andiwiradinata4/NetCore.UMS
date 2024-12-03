@@ -29,18 +29,11 @@ namespace UMS.Core.Contexts
         public DbSet<AppToken> AppTokens { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDefaultSchema("dbo");
             base.OnModelCreating(modelBuilder);
+            modelBuilder.InitContext();
 
             /// Set Default Model ForeignKey is Restrict
             modelBuilder.SetRelationship(DeleteBehavior.Restrict);
-
-            /// Set IsConcurrencyToken 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var rowVersionProperty = entityType.GetProperties().FirstOrDefault(e => e.Name == "RowVersion");
-                if (rowVersionProperty != null && rowVersionProperty.ClrType == typeof(byte[])) modelBuilder.Entity(entityType.ClrType).Property("RowVersion").IsRowVersion().IsConcurrencyToken();
-            }
 
             //modelBuilder.ExcludeMigration<BloodType>();
             //modelBuilder.SetToView<vwProduct>("E1AW_vwProduct");
