@@ -44,12 +44,15 @@
 
 		<Reference Include="AW.Core">
 			<HintPath>..\DLL\AW.Core.dll</HintPath>
+			<Private>True</Private>
 		</Reference>
 		<Reference Include="AW.Infrastructure">
 			<HintPath>..\DLL\AW.Infrastructure.dll</HintPath>
+			<Private>True</Private>
 		</Reference>
 		<Reference Include="AW.Web">
 			<HintPath>..\DLL\AW.Web.dll</HintPath>
+			<Private>True</Private>
 		</Reference>
 	</ItemGroup>
 	<Target Name="RenameAppsettings" AfterTargets="Publish">
