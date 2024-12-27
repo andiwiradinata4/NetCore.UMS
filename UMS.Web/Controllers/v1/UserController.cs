@@ -88,6 +88,7 @@ namespace UMS.Web.Controllers.v1
             if (data != null)
             {
                 messageObject.Data = data;
+                messageObject.Data.PasswordHash = "";
                 if (messageObject.ProcessingStatus) return Ok(messageObject);
             }
 

@@ -33,6 +33,34 @@ namespace UMS.Web.Controllers.v1
             return BadRequest(messageObject);
         }
 
+        [HttpPost("login/secure")]
+        public IActionResult LoginSecure([FromBody] LoginDTO dto)
+        {
+            MessageObject<TokenDTO> messageObject = _svc.LoginToken(dto.Username, dto.Password);
+            if (messageObject.ProcessingStatus)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = messageObject.Data.ValidTo,
+                };
+
+                Response.Cookies.Append("AuthToken", messageObject.Data.AccessToken, cookieOptions);
+                Response.Cookies.Append("RefreshToken", messageObject.Data.RefreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.None,
+                        Expires = messageObject.Data.ValidFrom.AddDays(7)
+                    });
+                return Ok(new { message = "Login successful" });
+            }
+            return BadRequest(messageObject);
+        }
+
         [HttpPost("refresh")]
         public IActionResult Refresh()
         {
@@ -41,6 +69,38 @@ namespace UMS.Web.Controllers.v1
             if (string.IsNullOrEmpty(refreshToken)) messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "RefreshToken"));
             messageObject = _svc.RefreshToken(refreshToken!);
             if (messageObject.ProcessingStatus) return Ok(messageObject);
+            return Unauthorized(messageObject);
+        }
+
+        [HttpPost("refresh/secure")]
+        public IActionResult RefreshSecure()
+        {
+            MessageObject<TokenDTO> messageObject = new MessageObject<TokenDTO>();
+            string? refreshToken = Request.Cookies["RefreshToken"];
+            if (string.IsNullOrEmpty(refreshToken)) messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "RefreshToken"));
+            messageObject = _svc.RefreshToken(refreshToken!);
+
+            if (messageObject.ProcessingStatus)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = messageObject.Data.ValidTo,
+                };
+
+                Response.Cookies.Append("AuthToken", messageObject.Data.AccessToken, cookieOptions);
+                Response.Cookies.Append("RefreshToken", messageObject.Data.RefreshToken,
+                    new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.None,
+                        Expires = messageObject.Data.ValidFrom.AddDays(7)
+                    });
+                return Ok(new { message = "Token refreshed successfully" });
+            }
             return Unauthorized(messageObject);
         }
 

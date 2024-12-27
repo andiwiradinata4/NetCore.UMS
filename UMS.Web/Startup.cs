@@ -13,6 +13,7 @@ using UMS.Infrastructure.Services;
 using UMS.Infrastructure.Interfaces.Services;
 using UMS.Infrastructure.Interfaces.Repositories;
 using UMS.Infrastructure.Repositories;
+using AW.Infrastructure.Middlewares;
 
 namespace UMS.Web
 {
@@ -96,7 +97,6 @@ namespace UMS.Web
             // # Call Http Client
             services.AddHttpClient();
             services.AddTransient<IClientCredentialService, ClientCredentialService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,14 +136,18 @@ namespace UMS.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            //app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseCors(x => x.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+
+            app.UseMiddleware<JwtMiddleware>();
             app.UseAuthentication();
-            
+            app.UseAuthorization();
+
+
             //app.UseMiddleware<MessageHandlerInterceptor>();
             //app.UseMiddleware<FilterComLoc>();
             //app.UsFilterComLoc();
 
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
