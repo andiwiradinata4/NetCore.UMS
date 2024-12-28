@@ -73,5 +73,39 @@ namespace UMS.Infrastructure.Services
             entity.Id += max.ToString("000");
             return entity;
         }
+
+        public override ICollection<AppUser> GetAll()
+        {
+            ICollection<AppUser> result = base.GetAll();
+            foreach (var item in result)
+            {
+                item.PasswordHash = "";
+            }
+            return result;
+        }
+
+        public override async Task<List<AppUser>> GetAllAsync()
+        {
+            var result = await base.GetAllAsync();
+            foreach (var item in result)
+            {
+                item.PasswordHash = "";
+            }
+            return result;
+        }
+
+        public override Task<AppUser?> GetByIDAsync(string Id)
+        {
+            AppUser result = base.GetById(Id) ?? new AppUser();
+            if (result != null) result.PasswordHash = "";
+            return Task.FromResult<AppUser?>(result);
+        }
+
+        public override AppUser? GetById(string Id)
+        {
+            AppUser? result = base.GetById(Id);
+            if (result!= null) result.PasswordHash = "";
+            return result;
+        }
     }
 }

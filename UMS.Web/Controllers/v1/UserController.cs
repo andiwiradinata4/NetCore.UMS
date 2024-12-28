@@ -2,11 +2,9 @@
 using AW.Infrastructure.Interfaces.Services;
 using AW.Web.Controllers.v1;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using UMS.Core.Contexts;
-using UMS.Core.DTOs;
 using UMS.Core.Entities;
 using UMS.Infrastructure.Interfaces.Services;
 
@@ -23,6 +21,18 @@ namespace UMS.Web.Controllers.v1
         public override Task<IActionResult> Get()
         {
             return base.Get();
+        }
+
+        [Authorize]
+        public override async Task<IActionResult> Get(string id)
+        {
+            AppUser? val = await _svc.GetByIDAsync(id);
+            if (val == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(val);
         }
 
         [Authorize]
