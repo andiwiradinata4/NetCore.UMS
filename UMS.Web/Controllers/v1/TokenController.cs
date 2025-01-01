@@ -43,7 +43,7 @@ namespace UMS.Web.Controllers.v1
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.None,
+                    SameSite = SameSiteMode.Strict,
                     Expires = messageObject.Data.ValidTo,
                 };
 
@@ -53,7 +53,7 @@ namespace UMS.Web.Controllers.v1
                     {
                         HttpOnly = true,
                         Secure = true,
-                        SameSite = SameSiteMode.None,
+                        SameSite = SameSiteMode.Strict,
                         Expires = messageObject.Data.ValidFrom.AddDays(7)
                     });
                 return Ok(new { message = "Login successful" });
@@ -86,7 +86,7 @@ namespace UMS.Web.Controllers.v1
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.None,
+                    SameSite = SameSiteMode.Strict,
                     Expires = messageObject.Data.ValidTo,
                 };
 
@@ -96,7 +96,7 @@ namespace UMS.Web.Controllers.v1
                     {
                         HttpOnly = true,
                         Secure = true,
-                        SameSite = SameSiteMode.None,
+                        SameSite = SameSiteMode.Strict,
                         Expires = messageObject.Data.ValidFrom.AddDays(7)
                     });
                 return Ok(new { message = "Token refreshed successfully" });
