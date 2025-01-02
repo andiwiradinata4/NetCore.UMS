@@ -137,7 +137,7 @@ namespace UMS.Web
             app.UseStaticFiles();
             app.UseRouting();
             //app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-            app.UseCors(x => x.WithOrigins("http://localhost:5173", "https://vue.andiwiradinata.com", "https://erps.andiwiradinata.com").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+            app.UseCors(x => x.WithOrigins("http://localhost:5173", "https://vue.andiwiradinata.com", "http://vue.andiwiradinata.com", "https://erps.andiwiradinata.com", "http://gms.andiwiradinata.com", "https://gms.andiwiradinata.com").AllowAnyHeader().AllowAnyMethod().AllowCredentials());
 
             app.UseMiddleware<JwtMiddleware>();
             app.UseAuthentication();
