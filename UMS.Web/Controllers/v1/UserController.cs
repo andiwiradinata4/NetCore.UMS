@@ -1,8 +1,10 @@
 ﻿using AW.Core.DTOs;
+using AW.Core.DTOs.Interfaces;
 using AW.Infrastructure.Interfaces.Services;
 using AW.Web.Controllers.v1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using UMS.Core.Contexts;
 using UMS.Core.Entities;
@@ -44,7 +46,33 @@ namespace UMS.Web.Controllers.v1
         [Authorize]
         public override IActionResult Update([FromRoute] string id, [FromBody] AppUser obj)
         {
-            return base.Update(id, obj);
+            //return base.Update(id, obj);
+            if (!base.ModelState.IsValid)
+            {
+                return BadRequest(base.ModelState);
+            }
+
+            MessageObject<AppUser> msg = base.ValidateUpdate(id, obj);
+            try
+            {
+                if (msg.ProcessingStatus) msg = _svc.Update(id, obj);
+                if (msg.ProcessingStatus)
+                {
+                    return Ok(msg);
+                }
+
+                return BadRequest(msg);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!svc.Exists(id))
+                {
+                    return NotFound();
+                }
+
+                throw;
+            }
+
         }
 
         [Authorize]

@@ -1,4 +1,5 @@
 ﻿using AW.Core.DTOs;
+using AW.Core.DTOs.Interfaces;
 using AW.Infrastructure.Interfaces.Repositories;
 using AW.Infrastructure.Services;
 using AW.Infrastructure.Utils;
@@ -104,8 +105,20 @@ namespace UMS.Infrastructure.Services
         public override AppUser? GetById(string Id)
         {
             AppUser? result = base.GetById(Id);
-            if (result!= null) result.PasswordHash = "";
+            if (result != null) result.PasswordHash = "";
             return result;
         }
+
+        protected override AppUser BeforeUpdate(AppUser entity)
+        {
+            AppUser? user = repo.GetById(entity.Id);
+            if (user != null)
+            {
+                entity.PasswordHash = user.PasswordHash;
+            }
+
+            return base.BeforeUpdate(entity);
+        }
+
     }
 }
