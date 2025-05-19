@@ -26,15 +26,9 @@ namespace UMS.Web.Controllers.v1
         }
 
         [Authorize]
-        public override async Task<IActionResult> Get(string id)
+        public override IActionResult Get(string id, [FromBody] QueryObject query)
         {
-            AppUser? val = await _svc.GetByIDAsync(id);
-            if (val == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(val);
+            return base.Get(id, query);
         }
 
         [Authorize]
@@ -46,7 +40,6 @@ namespace UMS.Web.Controllers.v1
         [Authorize]
         public override IActionResult Update([FromRoute] string id, [FromBody] AppUser obj)
         {
-            //return base.Update(id, obj);
             if (!base.ModelState.IsValid)
             {
                 return BadRequest(base.ModelState);
