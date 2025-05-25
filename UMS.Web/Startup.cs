@@ -173,16 +173,25 @@ namespace UMS.Web
             //});
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // #region "Custom Service"
+            #region "Custom Service"
             services.AddScoped(typeof(IUserService), typeof(UserService));
             services.AddScoped(typeof(ITokenService), typeof(TokenService));
-            // #endregion 
+            services.AddScoped(typeof(IUserAccessService), typeof(UserAccessService));
+            services.AddScoped(typeof(IUserAccessGroupService), typeof(UserAccessGroupService));
+            services.AddScoped(typeof(IUserAccessGroupModuleService), typeof(UserAccessGroupModuleService));
+            services.AddScoped(typeof(IUserAccessGroupModuleAccessService), typeof(UserAccessGroupModuleAccessService));
+
+            #endregion
 
 
-            // #region "Custom Repository"
+            #region "Custom Repository"
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(ITokenRepository), typeof(TokenRepository));
-            // #endregion 
+            services.AddScoped(typeof(IUserAccessRepository), typeof(UserAccessRepository));
+            services.AddScoped(typeof(IUserAccessGroupRepository), typeof(UserAccessGroupRepository));
+            services.AddScoped(typeof(IUserAccessGroupModuleRepository), typeof(UserAccessGroupModuleRepository));
+            services.AddScoped(typeof(IUserAccessGroupModuleAccessRepository), typeof(UserAccessGroupModuleAccessRepository));
+            #endregion
         }
 
     }

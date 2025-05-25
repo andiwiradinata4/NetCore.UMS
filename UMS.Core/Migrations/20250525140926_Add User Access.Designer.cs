@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UMS.Core.Contexts;
 
@@ -11,9 +12,11 @@ using UMS.Core.Contexts;
 namespace UMS.Core.Migrations
 {
     [DbContext(typeof(UMSDbContext))]
-    partial class UMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250525140926_Add User Access")]
+    partial class AddUserAccess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

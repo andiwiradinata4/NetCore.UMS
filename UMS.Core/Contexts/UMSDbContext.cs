@@ -27,6 +27,10 @@ namespace UMS.Core.Contexts
 
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<AppToken> AppTokens { get; set; }
+        public DbSet<AppUserAccess> AppUserAccesses { get; set; }
+        public DbSet<AppUserAccessGroup> AppUserAccessGroups { get; set; }
+        public DbSet<AppUserAccessGroupModule> AppUserAccessGroupModules { get; set; }
+        public DbSet<AppUserAccessGroupModuleAccess> AccessGroupModuleAccesses { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
