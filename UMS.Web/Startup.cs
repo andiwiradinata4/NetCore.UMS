@@ -76,7 +76,7 @@ namespace UMS.Web
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; 
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind;
                 //avoid camel case names by default
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();

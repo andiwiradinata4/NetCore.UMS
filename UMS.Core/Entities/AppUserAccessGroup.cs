@@ -12,10 +12,15 @@ namespace UMS.Core.Entities
     [Table("UMS_mstUserAccessGroup")]
     public class AppUserAccessGroup : BaseEntity
     {
-        [ForeignKey("AppUserAccess")]
-        public string AppUserAccessId { get; set; } = string.Empty;
-        public AppUserAccess? AppUserAccess { get; set; }
-        public AppUser? AppUser { get; set; }
+        public string AppSystemId { get; set; } = string.Empty;
+        public string AppSystemCode { get; set; } = string.Empty;
+        public string AppSystemName { get; set; } = string.Empty;
+        public string AppProjectId { get; set; } = string.Empty;
+        public string AppProjectCode { get; set; } = string.Empty;
+        public string AppProjectName { get; set; } = string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
+        public string CompanyInitial { get; set; } = string.Empty;
+        public string CompanyDescription { get; set; } = string.Empty;
         [StringLength(256)]
         public string Code { get; set; } = string.Empty;
         [StringLength(256)]
