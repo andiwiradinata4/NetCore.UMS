@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UMS.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitMigrate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,14 +57,9 @@ namespace UMS.Core.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AppSystemId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppSystemCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppSystemName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppProjectId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppProjectCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppProjectName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CompanyId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyInitial = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CompanyDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CompanyLocationId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
@@ -163,8 +158,6 @@ namespace UMS.Core.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AppModuleId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppModuleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppModuleDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppUserAccessGroupId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LogBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LogByUserDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -198,8 +191,6 @@ namespace UMS.Core.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AppAccessId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppAccessName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AppAccessDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AppUserAccessGroupModuleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     LogBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LogByUserDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),

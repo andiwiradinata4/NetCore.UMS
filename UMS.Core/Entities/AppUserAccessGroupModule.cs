@@ -12,8 +12,6 @@ namespace UMS.Core.Entities
     public class AppUserAccessGroupModule : BaseEntity
     {
         public string AppModuleId { get; set; } = string.Empty;
-        public string AppModuleName { get; set; } = string.Empty;
-        public string AppModuleDescription { get; set; } = string.Empty;
         [ForeignKey("AppUserAccessGroup")]
         public string AppUserAccessGroupId { get; set; } = string.Empty;
         public AppUserAccessGroup? AppUserAccessGroup { get; set; }

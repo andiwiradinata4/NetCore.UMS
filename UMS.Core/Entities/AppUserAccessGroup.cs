@@ -13,14 +13,9 @@ namespace UMS.Core.Entities
     public class AppUserAccessGroup : BaseEntity
     {
         public string AppSystemId { get; set; } = string.Empty;
-        public string AppSystemCode { get; set; } = string.Empty;
-        public string AppSystemName { get; set; } = string.Empty;
         public string AppProjectId { get; set; } = string.Empty;
-        public string AppProjectCode { get; set; } = string.Empty;
-        public string AppProjectName { get; set; } = string.Empty;
         public string CompanyId { get; set; } = string.Empty;
-        public string CompanyInitial { get; set; } = string.Empty;
-        public string CompanyDescription { get; set; } = string.Empty;
+        public string CompanyLocationId { get; set; } = string.Empty;
         [StringLength(256)]
         public string Code { get; set; } = string.Empty;
         [StringLength(256)]
