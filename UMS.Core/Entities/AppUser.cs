@@ -30,5 +30,7 @@ namespace UMS.Core.Entities
         public DateTime LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        [NotMapped]
+        public List<AppUserRole> Roles { get; set; } = [];
     }
 }

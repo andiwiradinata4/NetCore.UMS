@@ -1,5 +1,4 @@
-﻿using AW.Core.DTOs;
-using AW.Infrastructure.Repositories;
+﻿using AW.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +11,9 @@ using UMS.Infrastructure.Interfaces.Repositories;
 
 namespace UMS.Infrastructure.Repositories
 {
-	public class UserRepository : BaseRepository<UMSDbContext, AppUser>, IUserRepository
+	public class AppRoleRepository : BaseRepository<UMSDbContext, AppRole>, IAppRoleRepository
 	{
-		public UserRepository(UMSDbContext context, IPrincipal pctx) : base(context, pctx)
+		public AppRoleRepository(UMSDbContext context, IPrincipal pctx) : base(context, pctx)
 		{
 		}
 	}

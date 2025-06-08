@@ -180,9 +180,10 @@ namespace UMS.Web
             services.AddScoped(typeof(IUserAccessGroupService), typeof(UserAccessGroupService));
             services.AddScoped(typeof(IUserAccessGroupModuleService), typeof(UserAccessGroupModuleService));
             services.AddScoped(typeof(IUserAccessGroupModuleAccessService), typeof(UserAccessGroupModuleAccessService));
+            services.AddScoped(typeof(IUserRoleService), typeof(UserRoleService));
+            services.AddScoped(typeof(IAppRoleService), typeof(AppRoleService));
 
             #endregion
-
 
             #region "Custom Repository"
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
@@ -191,8 +192,10 @@ namespace UMS.Web
             services.AddScoped(typeof(IUserAccessGroupRepository), typeof(UserAccessGroupRepository));
             services.AddScoped(typeof(IUserAccessGroupModuleRepository), typeof(UserAccessGroupModuleRepository));
             services.AddScoped(typeof(IUserAccessGroupModuleAccessRepository), typeof(UserAccessGroupModuleAccessRepository));
-            #endregion
-        }
+			services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
+			services.AddScoped(typeof(IAppRoleRepository), typeof(AppRoleRepository));
+			#endregion
+		}
 
     }
 }

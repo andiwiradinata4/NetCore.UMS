@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UMS.Core.Entities;
 
 namespace UMS.Core.DTOs
 {
@@ -16,5 +17,6 @@ namespace UMS.Core.DTOs
         public string RefreshToken { get; set; } = String.Empty;
         public string Issuer { get; set; } = String.Empty;
         public string Audience { get; set; } = String.Empty;
-    }
+		public List<String> Roles { get; set; } = [];
+	}
 }

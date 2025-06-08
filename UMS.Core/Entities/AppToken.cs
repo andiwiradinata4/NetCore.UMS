@@ -9,24 +9,23 @@ using System.Threading.Tasks;
 
 namespace UMS.Core.Entities
 {
-    [Table("UMS_sysToken")]
-    public class AppToken : BaseEntity
-    {
-        public string UserID { get; set; } = string.Empty;
-        public string TokenType { get; set; } = string.Empty;
-        public string TokenValue { get; set; } = string.Empty;
-        [StringLength(256)]
-        public string Code { get; set; } = string.Empty;
-        public DateTime ValidFrom { get; set; }
-        public DateTime ValidTo { get; set; }
-
-        public enum TokenTypeValue
-        {
-            EMAIL_CONFIRMATION,
-            CHANGE_EMAIL,
-            LOGIN_TOKEN,
-            REFRESH_TOKEN,
-            RESET_PASSWORD_TOKEN,
-        }
-    }
+	[Table("UMS_sysToken")]
+	public class AppToken : BaseEntity
+	{
+		public string UserID { get; set; } = string.Empty;
+		public string TokenType { get; set; } = string.Empty;
+		public string TokenValue { get; set; } = string.Empty;
+		[StringLength(256)]
+		public string Code { get; set; } = string.Empty;
+		public DateTime ValidFrom { get; set; }
+		public DateTime ValidTo { get; set; }
+		public enum TokenTypeValue
+		{
+			EMAIL_CONFIRMATION,
+			CHANGE_EMAIL,
+			LOGIN_TOKEN,
+			REFRESH_TOKEN,
+			RESET_PASSWORD_TOKEN,
+		}
+	}
 }

@@ -1,28 +1,29 @@
 ﻿using AW.Core.DTOs;
-using AW.Core.DTOs.Interfaces;
 using AW.Infrastructure.Interfaces.Repositories;
 using AW.Infrastructure.Services;
 using AW.Infrastructure.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using UMS.Core.Contexts;
-using UMS.Core.DTOs;
 using UMS.Core.Entities;
+using UMS.Infrastructure.Interfaces.Repositories;
 using UMS.Infrastructure.Interfaces.Services;
 
 namespace UMS.Infrastructure.Services
 {
     public class UserService : BaseService<UMSDbContext, AppUser>, IUserService
     {
-        public UserService(IBaseRepository<UMSDbContext, AppUser> repo) : base(repo)
+		private readonly IUserRoleRepository _userRoleRepo;
+
+		public UserService(IBaseRepository<UMSDbContext, AppUser> repo, IUserRoleRepository userRoleRepo) : base(repo)
         {
+            _userRoleRepo = userRoleRepo;
         }
 
         protected override MessageObject<AppUser> ValidateCreate(AppUser entity)
@@ -120,5 +121,19 @@ namespace UMS.Infrastructure.Services
             return base.BeforeUpdate(entity);
         }
 
-    }
+		public override object? GetByIdWithQueryObject(string Id, QueryObject query)
+		{
+			object? data = base.GetByIdWithQueryObject(Id, query);
+            if (data != null) {
+				var dataObj = Newtonsoft.Json.Linq.JObject.FromObject(data);
+                var userRole = _userRoleRepo.GetAll(new QueryObject() { Columns = "AppRoleName", Includes = "AppRole", FilterParams = [ new FilterParams() { Key = "UserId", Option = "equals", Value = dataObj["Id"]!.ToString(), ValueType = "string" }] }, false);
+				var userRoleObj = JObject.FromObject(userRole);
+				var datasetObj = userRoleObj["DataSet"] as JArray;
+                if (datasetObj != null) dataObj["Roles"] = datasetObj;
+                return dataObj;
+			}
+
+            return data;
+		}
+	}
 }
