@@ -8,6 +8,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="DTOs\Interfaces\**" />
+	  <EmbeddedResource Remove="DTOs\Interfaces\**" />
+	  <None Remove="DTOs\Interfaces\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 
 		<Folder Include="Migrations\" />
 
@@ -23,8 +29,6 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.2" />
-
-		<Folder Include="DTOs\Interfaces\" />
 		<Folder Include="Entities\Interface\" />
 	</ItemGroup>
 
