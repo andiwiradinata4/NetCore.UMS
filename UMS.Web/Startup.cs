@@ -14,6 +14,8 @@ using UMS.Infrastructure.Interfaces.Services;
 using UMS.Infrastructure.Interfaces.Repositories;
 using UMS.Infrastructure.Repositories;
 using AW.Infrastructure.Middlewares;
+using UMS.Infrastructure.Interfaces.Services.Proxies;
+using UMS.Infrastructure.Services.Proxies;
 
 namespace UMS.Web
 {
@@ -76,7 +78,7 @@ namespace UMS.Web
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore; 
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind;
                 //avoid camel case names by default
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -97,6 +99,24 @@ namespace UMS.Web
             // # Call Http Client
             services.AddHttpClient();
             services.AddTransient<IClientCredentialService, ClientCredentialService>();
+
+            services.AddMemoryCache();
+            services.AddHttpClient<IAppSystemService, AppSystemService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["APIBaseUrl:GMS"] ?? "https://localhost:3104");
+            });
+            services.AddHttpClient<IAppProjectService, AppProjectService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["APIBaseUrl:GMS"] ?? "https://localhost:3104");
+            });
+            services.AddHttpClient<ICompanyService, CompanyService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["APIBaseUrl:CMS"] ?? "https://localhost:3105");
+            });
+            services.AddHttpClient<ICompanyLocationService, CompanyLocationService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["APIBaseUrl:CMS"] ?? "https://localhost:3105");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -183,6 +203,8 @@ namespace UMS.Web
             services.AddScoped(typeof(IUserRoleService), typeof(UserRoleService));
             services.AddScoped(typeof(IAppRoleService), typeof(AppRoleService));
 
+            services.AddScoped<ICacheService, CacheService>();
+
             #endregion
 
             #region "Custom Repository"
@@ -192,10 +214,10 @@ namespace UMS.Web
             services.AddScoped(typeof(IUserAccessGroupRepository), typeof(UserAccessGroupRepository));
             services.AddScoped(typeof(IUserAccessGroupModuleRepository), typeof(UserAccessGroupModuleRepository));
             services.AddScoped(typeof(IUserAccessGroupModuleAccessRepository), typeof(UserAccessGroupModuleAccessRepository));
-			services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
-			services.AddScoped(typeof(IAppRoleRepository), typeof(AppRoleRepository));
-			#endregion
-		}
+            services.AddScoped(typeof(IUserRoleRepository), typeof(UserRoleRepository));
+            services.AddScoped(typeof(IAppRoleRepository), typeof(AppRoleRepository));
+            #endregion
+        }
 
     }
 }

@@ -20,7 +20,7 @@ namespace UMS.Infrastructure.Services.Proxies
 		private readonly HttpClient _httpClient;
 		private readonly ICacheService _cacheService;
 		private readonly ILogger<CompanyService> _logger;
-		private const string _baseEndPoint = "/api/v1/appproject";
+		private const string _baseEndPoint = "/api/v1/company";
 		private const double defaultMinute = 120;
 
 		public CompanyService(IBaseRepository<UMSDbContext, CompanyDto> baseRepo, HttpClient httpClient, ICacheService cacheService, ILogger<CompanyService> logger) : base(baseRepo)
@@ -54,7 +54,7 @@ namespace UMS.Infrastructure.Services.Proxies
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Failed to call App Project Service.");
+				_logger.LogError(ex, "Failed to call Company Service.");
 			}
 			return new MessageGetList<CompanyDto>();
 		}
@@ -82,7 +82,7 @@ namespace UMS.Infrastructure.Services.Proxies
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "Failed to call App Project Service.");
+				_logger.LogError(ex, "Failed to call Company Service.");
 			}
 			return null;
 		}

@@ -24,7 +24,7 @@ namespace UMS.Web.Controllers.v1
 			return base.Get();
 		}
 
-		[Authorize(Roles = "IT-SUPPORT")]
+		[Authorize]
 		public override IActionResult Get(string id, [FromBody] QueryObject query)
 		{
 			object? byIdWithQueryObject = _svc.GetByIdWithQueryObject(id, query);
@@ -54,12 +54,9 @@ namespace UMS.Web.Controllers.v1
 			try
 			{
 				if (msg.ProcessingStatus) msg = _svc.Update(id, obj);
-				if (msg.ProcessingStatus)
-				{
-					return Ok(msg);
-				}
+				if (msg.ProcessingStatus) return Ok(msg);
 
-				return BadRequest(msg);
+                return BadRequest(msg);
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -73,13 +70,13 @@ namespace UMS.Web.Controllers.v1
 
 		}
 
-		[Authorize]
+		[Authorize(Roles = "IT-SUPPORT")]
 		public override IActionResult Delete(string id)
 		{
 			return base.Delete(id);
 		}
 
-		[Authorize]
+		[Authorize(Roles = "IT-SUPPORT")]
 		public override IActionResult Disable([FromRoute] string id, [FromBody] AppUser obj)
 		{
 			return base.Disable(id, obj);

@@ -58,7 +58,7 @@
         },
         {
             "Key": "LogInc",
-            "Option": "eq",
+            "Option": "equals",
             "Value": 1
         },
         {
