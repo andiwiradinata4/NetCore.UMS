@@ -31,9 +31,8 @@ namespace UMS.Infrastructure.Services
             _companyLocationService = companyLocationService;
         }
 
-        protected override MessageObject<AppUserAccessGroup> ValidateCreate(AppUserAccessGroup entity)
+        private MessageObject<AppUserAccessGroup> ValidateDefault(MessageObject<AppUserAccessGroup> messageObject, AppUserAccessGroup entity)
         {
-            MessageObject<AppUserAccessGroup> messageObject = base.ValidateCreate(entity);
             if (entity.AppSystemId == string.Empty)
             {
                 messageObject.AddMessage(MessageType.Error, "400", "App System Id not allow Empty", "AppSystemId");
@@ -89,78 +88,31 @@ namespace UMS.Infrastructure.Services
                 var refData = _companyService.GetByIdProxy(entity.CompanyLocationId, new QueryObject()).Result;
                 if (refData == null) messageObject.AddMessage(MessageType.Error, "400", $"Company Location Id {entity.CompanyLocationId} not found", "CompanyLocationId");
             }
+
+            if (base.ExistsInDb(e => e.AppSystemId == entity.AppSystemId && e.AppProjectId == entity.AppProjectId && e.CompanyId == entity.CompanyId && e.CompanyLocationId == entity.CompanyLocationId && e.Id != entity.Id)) messageObject.AddMessage(MessageType.Error, "400", $"Data with App System Id {entity.AppSystemId}, App Project Id {entity.AppProjectId}, Company Id {entity.CompanyId}, Company Location Id {entity.CompanyLocationId} already exists.", "");
+
+            return messageObject;
+        }
+
+        protected override MessageObject<AppUserAccessGroup> ValidateCreate(AppUserAccessGroup entity)
+        {
+            MessageObject<AppUserAccessGroup> messageObject = base.ValidateCreate(entity);
+            messageObject = ValidateDefault(messageObject, entity);
             return messageObject;
         }
 
         protected override MessageObject<AppUserAccessGroup> ValidateUpdate(AppUserAccessGroup entity)
         {
             MessageObject<AppUserAccessGroup> messageObject = base.ValidateUpdate(entity);
-            if (entity.AppSystemId == string.Empty)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "App System Id not allow Empty", "AppSystemId");
-            }
-            else if (entity.AppSystemId == null)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "App System Id not allow null", "AppSystemId");
-            }
-            else
-            {
-                var refData = _appSystemService.GetByIdProxy(entity.AppSystemId, new QueryObject()).Result;
-                if (refData == null) messageObject.AddMessage(MessageType.Error, "400", $"App System Id {entity.AppSystemId} not found", "AppSystemId");
-            }
-
-            if (entity.AppProjectId == string.Empty)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "App Project Id not allow Empty", "AppProjectId");
-            }
-            else if (entity.AppProjectId == null)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "App Project Id not allow null", "AppProjectId");
-            }
-            else
-            {
-                var refData = _appProjectService.GetByIdProxy(entity.AppProjectId, new QueryObject()).Result;
-                if (refData == null) messageObject.AddMessage(MessageType.Error, "400", $"App Project Id {entity.AppProjectId} not found", "AppProjectId");
-            }
-
-            if (entity.CompanyId == string.Empty)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "Company Id not allow Empty", "CompanyId");
-            }
-            else if (entity.CompanyId == null)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "Company Id not allow null", "CompanyId");
-            }
-            else
-            {
-                var refData = _companyService.GetByIdProxy(entity.CompanyId, new QueryObject()).Result;
-                if (refData == null) messageObject.AddMessage(MessageType.Error, "400", $"Company Id {entity.CompanyId} not found", "CompanyId");
-            }
-
-            if (entity.CompanyLocationId == string.Empty)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "Company Location Id not allow Empty", "CompanyLocationId");
-            }
-            else if (entity.CompanyLocationId == null)
-            {
-                messageObject.AddMessage(MessageType.Error, "400", "Company Location Id not allow null", "CompanyLocationId");
-            }
-            else
-            {
-                var refData = _companyService.GetByIdProxy(entity.CompanyLocationId, new QueryObject()).Result;
-                if (refData == null) messageObject.AddMessage(MessageType.Error, "400", $"Company Location Id {entity.CompanyLocationId} not found", "CompanyLocationId");
-            }
+            messageObject = ValidateDefault(messageObject, entity);            
             return messageObject;
         }
 
         public override object GetAll(QueryObject query, bool withDisabled)
         {
-            string Includes = query.Includes;
-            if (query.Includes.Contains("AppProject")) query.Includes = query.Includes.Replace("AppProject", "");
-            if (query.Includes.Contains("AppSystem")) query.Includes = query.Includes.Replace("AppSystem", "");
-            if (query.Includes.Contains("CompanyLocation")) query.Includes = query.Includes.Replace("CompanyLocation", "");
-            if (query.Includes.Contains("Company")) query.Includes = query.Includes.Replace("Company", "");
-
+            string[] Includes = query.Includes.Split(",", StringSplitOptions.TrimEntries);
+            query.Includes = string.Join(",", Includes.Except(["AppProject", "AppSystem","CompanyLocation", "Company"]));
+            
             dynamic? data = base.GetAll(query, withDisabled);
             if (data != null)
             {
@@ -196,11 +148,8 @@ namespace UMS.Infrastructure.Services
 
         public override object? GetByIdWithQueryObject(string Id, QueryObject query)
         {
-            string Includes = query.Includes;
-            if (query.Includes.Contains("AppProject")) query.Includes = query.Includes.Replace("AppProject", "");
-            if (query.Includes.Contains("AppSystem")) query.Includes = query.Includes.Replace("AppSystem", "");
-            if (query.Includes.Contains("CompanyLocation")) query.Includes = query.Includes.Replace("CompanyLocation", "");
-            if (query.Includes.Contains("Company")) query.Includes = query.Includes.Replace("Company", "");
+            string[] Includes = query.Includes.Split(",", StringSplitOptions.TrimEntries);
+            query.Includes = string.Join(",", Includes.Except(["AppProject", "AppSystem", "CompanyLocation", "Company"]));
 
             var data = base.GetByIdWithQueryObject(Id, query);
             if (data != null)

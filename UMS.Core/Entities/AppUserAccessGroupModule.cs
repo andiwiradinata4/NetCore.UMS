@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UMS.Core.DTOs;
 
 namespace UMS.Core.Entities
 {
@@ -13,7 +14,7 @@ namespace UMS.Core.Entities
     {
         public string AppModuleId { get; set; } = string.Empty;
         [NotMapped]
-        public object? AppModule { get; set; }
+        public AppModuleDto? AppModule { get; set; }
         [ForeignKey("AppUserAccessGroup")]
         public string AppUserAccessGroupId { get; set; } = string.Empty;
         public AppUserAccessGroup? AppUserAccessGroup { get; set; }

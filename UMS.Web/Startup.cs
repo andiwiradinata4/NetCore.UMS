@@ -109,6 +109,14 @@ namespace UMS.Web
             {
                 client.BaseAddress = new Uri(Configuration["APIBaseUrl:GMS"] ?? "https://localhost:3104");
             });
+            services.AddHttpClient<IAppModuleService, AppModuleService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["APIBaseUrl:GMS"] ?? "https://localhost:3104");
+            });
+            services.AddHttpClient<IAppAccessService, AppAccessService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["APIBaseUrl:GMS"] ?? "https://localhost:3104");
+            });
             services.AddHttpClient<ICompanyService, CompanyService>(client =>
             {
                 client.BaseAddress = new Uri(Configuration["APIBaseUrl:CMS"] ?? "https://localhost:3105");
