@@ -12,9 +12,13 @@ namespace UMS.Core.Entities
     [Table("UMS_mstUserAccessGroup")]
     public class AppUserAccessGroup : BaseEntity
     {
+        [Required]
         public string AppSystemId { get; set; } = string.Empty;
+        [Required]
         public string AppProjectId { get; set; } = string.Empty;
+        [Required]
         public string CompanyId { get; set; } = string.Empty;
+        [Required]
         public string CompanyLocationId { get; set; } = string.Empty;
         [StringLength(256)]
         public string Code { get; set; } = string.Empty;

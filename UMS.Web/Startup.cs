@@ -16,6 +16,7 @@ using UMS.Infrastructure.Repositories;
 using AW.Infrastructure.Middlewares;
 using UMS.Infrastructure.Interfaces.Services.Proxies;
 using UMS.Infrastructure.Services.Proxies;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UMS.Web
 {
@@ -100,6 +101,7 @@ namespace UMS.Web
             services.AddHttpClient();
             services.AddTransient<IClientCredentialService, ClientCredentialService>();
 
+            // # Handle Proxy Service
             services.AddMemoryCache();
             services.AddHttpClient<IAppSystemService, AppSystemService>(client =>
             {
@@ -125,6 +127,9 @@ namespace UMS.Web
             {
                 client.BaseAddress = new Uri(Configuration["APIBaseUrl:CMS"] ?? "https://localhost:3105");
             });
+
+            // # Disable [ApiController] ModelState Validation for use Custom Validation
+            services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
