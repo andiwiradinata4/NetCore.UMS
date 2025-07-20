@@ -17,6 +17,6 @@ namespace UMS.Infrastructure.Interfaces.Services
         MessageObject<TokenDTO> LoginToken(string username, string password);
         MessageObject<TokenDTO> RefreshToken(string refreshToken);
         Task<MessageObject<VerifyTokenDTO>> ResetPasswordToken(string email);
-        Task<MessageObject<bool>> VerifyToken(string userId, VerifyTokenDTO dto, AppToken.TokenTypeValue tokenType);
+        Task<MessageObject<bool>> VerifyToken(VerifyTokenDTO dto, AppToken.TokenTypeValue tokenType);
     }
 }

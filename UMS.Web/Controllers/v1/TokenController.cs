@@ -125,13 +125,13 @@ namespace UMS.Web.Controllers.v1
         public async Task<IActionResult> VerifyEmailConfirmation([FromBody] VerifyTokenDTO dto)
         {
             MessageObject<bool> messageObject = new MessageObject<bool>();
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "UserId"));
-                return Unauthorized(messageObject);
-            }
-            messageObject = await _svc.VerifyToken(userId!, dto, AppToken.TokenTypeValue.EMAIL_CONFIRMATION);
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "UserId"));
+            //    return Unauthorized(messageObject);
+            //}
+            messageObject = await _svc.VerifyToken(dto, AppToken.TokenTypeValue.EMAIL_CONFIRMATION);
             if (messageObject.ProcessingStatus) return Ok(messageObject);
             return BadRequest(messageObject);
         }
@@ -153,17 +153,16 @@ namespace UMS.Web.Controllers.v1
         }
 
         [HttpPost("verify-change-email")]
-        [Authorize]
         public async Task<IActionResult> VerifyChangeEmail([FromBody] VerifyTokenDTO dto)
         {
             MessageObject<bool> messageObject = new MessageObject<bool>();
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "UserId"));
-                return Unauthorized(messageObject);
-            }
-            messageObject = await _svc.VerifyToken(userId!, dto, AppToken.TokenTypeValue.CHANGE_EMAIL);
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "UserId"));
+            //    return Unauthorized(messageObject);
+            //}
+            messageObject = await _svc.VerifyToken(dto, AppToken.TokenTypeValue.CHANGE_EMAIL);
             if (messageObject.ProcessingStatus) return Ok(messageObject);
             return BadRequest(messageObject);
         }
@@ -177,17 +176,16 @@ namespace UMS.Web.Controllers.v1
         }
 
         [HttpPost("verify-reset-password")]
-        [Authorize]
         public async Task<IActionResult> VerifyResetPassword([FromBody] VerifyTokenDTO dto)
         {
             MessageObject<bool> messageObject = new MessageObject<bool>();
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-            {
-                messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "UserId"));
-                return Unauthorized(messageObject);
-            }
-            messageObject = await _svc.VerifyToken(userId!, dto, AppToken.TokenTypeValue.RESET_PASSWORD_TOKEN);
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (string.IsNullOrEmpty(userId))
+            //{
+            //    messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "UserId"));
+            //    return Unauthorized(messageObject);
+            //}
+            messageObject = await _svc.VerifyToken(dto, AppToken.TokenTypeValue.RESET_PASSWORD_TOKEN);
             if (messageObject.ProcessingStatus) return Ok(messageObject);
             return BadRequest(messageObject);
         }

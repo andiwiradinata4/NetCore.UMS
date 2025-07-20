@@ -311,111 +311,123 @@ namespace UMS.Infrastructure.Services
 			return messageObject;
 		}
 
-		public async Task<MessageObject<bool>> VerifyToken(string userId, VerifyTokenDTO dto, AppToken.TokenTypeValue tokenType)
+		public async Task<MessageObject<bool>> VerifyToken(VerifyTokenDTO dto, AppToken.TokenTypeValue tokenType)
 		{
 			UMSDbContext context = base.repo.GetDbContext();
 			MessageObject<bool> messageObject = new MessageObject<bool>();
 
 			AppUser? user;
+			AppToken exists = base.repo.GetByConditionAsQueryable(e => e.TokenValue == dto.Token && e.TokenType == tokenType.ToString()).First();
 
-			if (tokenType == AppToken.TokenTypeValue.RESET_PASSWORD_TOKEN)
+			if (exists == null)
 			{
-				if (string.IsNullOrEmpty(dto.NewValue) || string.IsNullOrEmpty(dto.ConfirmNewValue))
+				messageObject.AddMessage(new Message(MessageType.Error, "401", "Unauthorized", "Token"));
+				return messageObject;
+			}
+            else
+			{
+				if (tokenType == AppToken.TokenTypeValue.RESET_PASSWORD_TOKEN)
 				{
-					messageObject.AddMessage(new Message(MessageType.Error, "400", "Password and Confirm Password not allow blank", "Password"));
-					return messageObject;
+
+					if (string.IsNullOrEmpty(dto.NewValue) || string.IsNullOrEmpty(dto.ConfirmNewValue))
+					{
+						messageObject.AddMessage(new Message(MessageType.Error, "400", "Password and Confirm Password not allow blank", "Password"));
+						return messageObject;
+					}
+					else if (dto.NewValue != dto.ConfirmNewValue)
+					{
+						messageObject.AddMessage(new Message(MessageType.Error, "400", "Password and Confirm Password not match", "Password"));
+						return messageObject;
+					}
+
+					var oldToken = base.repo.GetByConditionAsQueryableWithDisabledRecord(e => e.TokenType == tokenType.ToString() && e.TokenValue == dto.Token && e.Code == dto.Code).ToList();
+					if (oldToken.Count() == 0)
+					{
+						messageObject.AddMessage(new Message(MessageType.Error, "400", "Unauthorized", "Token"));
+						return messageObject;
+					}
+					user = await _userRepo.GetByIDAsync(oldToken.First().UserID);
 				}
-				else if (dto.NewValue != dto.ConfirmNewValue)
+				else
 				{
-					messageObject.AddMessage(new Message(MessageType.Error, "400", "Password and Confirm Password not match", "Password"));
-					return messageObject;
+					user = await _userRepo.GetByIDAsync(exists.UserID);
 				}
 
-				var oldToken = base.repo.GetByConditionAsQueryableWithDisabledRecord(e => e.TokenType == tokenType.ToString() && e.TokenValue == dto.Token && e.Code == dto.Code).ToList();
-				if (oldToken.Count() == 0)
+				if (user == null) messageObject.AddMessage(new Message(MessageType.Error, "400", "User not found", "UserId"));
+
+				var oldTokenExists = base.repo.GetByConditionAsQueryableWithDisabledRecord(e => e.UserID == exists.UserID && e.TokenType == tokenType.ToString() && e.TokenValue != "SUCCESS").ToList();
+				if (oldTokenExists.Count() == 0)
+				{
+					messageObject.AddMessage(new Message(MessageType.Error, "400", "Unauthorized", "Token"));
+					return messageObject;
+				};
+
+				if (tokenType == AppToken.TokenTypeValue.CHANGE_EMAIL)
+				{
+					if (string.IsNullOrEmpty(dto.NewValue))
+					{
+						messageObject.AddMessage(new Message(MessageType.Error, "400", "New Email not allow blank", "NewValue"));
+						return messageObject;
+					}
+					else if (_userRepo.ExistsInDbWithDisabledRecord(e => e.Email == dto.NewValue && e.Id != user!.Id))
+					{
+						messageObject.AddMessage(new Message(MessageType.Error, "400", "New Email already exist", "NewValue"));
+						return messageObject;
+					}
+				}
+
+				AppToken token = oldTokenExists.First();
+				if (token.TokenValue != dto.Token)
 				{
 					messageObject.AddMessage(new Message(MessageType.Error, "400", "Unauthorized", "Token"));
 					return messageObject;
 				}
-				user = await _userRepo.GetByIDAsync(oldToken.First().UserID);
-			}
-			else
-			{
-				user = await _userRepo.GetByIDAsync(userId);
-			}
 
-			if (user == null) messageObject.AddMessage(new Message(MessageType.Error, "400", "User not found", "UserId"));
-
-			var oldTokenExists = base.repo.GetByConditionAsQueryableWithDisabledRecord(e => e.UserID == userId && e.TokenType == tokenType.ToString() && e.TokenValue != "SUCCESS").ToList();
-			if (oldTokenExists.Count() == 0)
-			{
-				messageObject.AddMessage(new Message(MessageType.Error, "400", "Unauthorized", "Token"));
-				return messageObject;
-			};
-
-			if (tokenType == AppToken.TokenTypeValue.CHANGE_EMAIL)
-			{
-				if (string.IsNullOrEmpty(dto.NewValue))
+				if (token.Code != dto.Code)
 				{
-					messageObject.AddMessage(new Message(MessageType.Error, "400", "New Email not allow blank", "NewValue"));
+					messageObject.AddMessage(new Message(MessageType.Error, "400", "Invalid code", "Code"));
 					return messageObject;
 				}
-				else if (_userRepo.ExistsInDbWithDisabledRecord(e => e.Email == dto.NewValue && e.Id != user!.Id))
+
+				if (messageObject.ProcessingStatus)
 				{
-					messageObject.AddMessage(new Message(MessageType.Error, "400", "New Email already exist", "NewValue"));
-					return messageObject;
-				}
-			}
-
-			AppToken token = oldTokenExists.First();
-			if (token.TokenValue != dto.Token)
-			{
-				messageObject.AddMessage(new Message(MessageType.Error, "400", "Unauthorized", "Token"));
-				return messageObject;
-			}
-
-			if (token.Code != dto.Code)
-			{
-				messageObject.AddMessage(new Message(MessageType.Error, "400", "Invalid code", "Code"));
-				return messageObject;
-			}
-
-			if (messageObject.ProcessingStatus)
-			{
-				using (var transaction = context.Database.BeginTransaction())
-				{
-					try
+					using (var transaction = context.Database.BeginTransaction())
 					{
-						token.TokenValue = "SUCCESS";
-						user!.EmailConfirmed = true;
-
-						if (tokenType == AppToken.TokenTypeValue.CHANGE_EMAIL)
+						try
 						{
-							user!.Email = dto.NewValue!;
-							user!.NormalizedEmail = dto.NewValue!;
+							token.TokenValue = "SUCCESS";
+							user!.EmailConfirmed = true;
+
+							if (tokenType == AppToken.TokenTypeValue.CHANGE_EMAIL)
+							{
+								user!.Email = dto.NewValue!;
+								user!.NormalizedEmail = dto.NewValue!;
+							}
+							else if (tokenType == AppToken.TokenTypeValue.RESET_PASSWORD_TOKEN)
+							{
+								user!.PasswordHash = PasswordHasher.HashPassword(dto.NewValue!);
+
+								var allTokenLogin = base.repo.GetByConditionAsQueryable(e => e.UserID == user!.Id && (e.TokenType == AppToken.TokenTypeValue.LOGIN_TOKEN.ToString() || e.TokenType == AppToken.TokenTypeValue.REFRESH_TOKEN.ToString()));
+								if (allTokenLogin.Count() > 0) context.RemoveRange(allTokenLogin);
+							}
+
+							context.SaveChanges();
+							transaction.Commit();
+							messageObject.Data = true;
 						}
-						else if (tokenType == AppToken.TokenTypeValue.RESET_PASSWORD_TOKEN)
+						catch (Exception ex)
 						{
-							user!.PasswordHash = PasswordHasher.HashPassword(dto.NewValue!);
-
-							var allTokenLogin = base.repo.GetByConditionAsQueryable(e => e.UserID == user!.Id && (e.TokenType == AppToken.TokenTypeValue.LOGIN_TOKEN.ToString() || e.TokenType == AppToken.TokenTypeValue.REFRESH_TOKEN.ToString()));
-							if (allTokenLogin.Count() > 0) context.RemoveRange(allTokenLogin);
+							/// Log Error
+							Console.WriteLine(ex.Message);
+							messageObject.AddException(ex);
+							transaction.Rollback();
 						}
-
-						context.SaveChanges();
-						transaction.Commit();
-						messageObject.Data = true;
-					}
-					catch (Exception ex)
-					{
-						/// Log Error
-						Console.WriteLine(ex.Message);
-						messageObject.AddException(ex);
-						transaction.Rollback();
 					}
 				}
+				return messageObject;
+
 			}
-			return messageObject;
+
 		}
 
 		private static string GenerateRefreshToken()
