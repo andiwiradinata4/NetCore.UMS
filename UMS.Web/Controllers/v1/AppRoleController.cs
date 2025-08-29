@@ -16,37 +16,38 @@ namespace UMS.Web.Controllers.v1
 		private readonly IAppRoleService _svc;
 		public AppRoleController(IAppRoleService svc) : base(svc) => _svc = svc;
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        //[Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult Create(AppRole obj)
         {
             return base.Create(obj);
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult Update([FromRoute] string id, [FromBody] AppRole obj)
         {
             return base.Update(id, obj);
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult Disable([FromRoute] string id, [FromBody] AppRole obj)
         {
             return base.Disable(id, obj);
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult Delete(string id)
         {
             return base.Delete(id);
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override Task<IActionResult> Get()
         {
             return base.Get();
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult Get(string id, [FromBody] QueryObject query)
         {
             return base.Get(id, query);
@@ -58,13 +59,13 @@ namespace UMS.Web.Controllers.v1
             return base.GetColumns();
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult PostPageList([FromBody] QueryObject query)
         {
             return base.PostPageList(query);
         }
 
-        [Authorize(Roles = "IT-SUPPORT")]
+        [Authorize()]
         public override IActionResult PostPageListWithDisabledRecord([FromBody] QueryObject query)
         {
             return base.PostPageListWithDisabledRecord(query);
